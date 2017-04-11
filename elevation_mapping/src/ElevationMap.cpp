@@ -355,8 +355,8 @@ bool ElevationMap::fuse(const grid_map::Index& topLeftIndex, const grid_map::Ind
     fusedMap_.at("elevation", *areaIterator) = mean;
     lowerBoundDistribution.compute();
     upperBoundDistribution.compute();
-    fusedMap_.at("lower_bound", *areaIterator) = lowerBoundDistribution.quantile(0.01); // TODO
-    fusedMap_.at("upper_bound", *areaIterator) = upperBoundDistribution.quantile(0.99); // TODO
+    fusedMap_.at("lower_bound", *areaIterator) = lowerBoundDistribution.quantile(0.0); // TODO
+    fusedMap_.at("upper_bound", *areaIterator) = upperBoundDistribution.quantile(1.0); // TODO
     // TODO Add fusion of colors.
     fusedMap_.at("color", *areaIterator) = rawMapCopy.at("color", *areaIterator);
 

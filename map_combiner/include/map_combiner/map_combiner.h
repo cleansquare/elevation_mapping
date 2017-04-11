@@ -84,8 +84,6 @@ protected:
 
   ros::Publisher pose_percept_publisher_;
 
-  ros::Publisher hazard_object_publisher_;
-
   ros::Publisher obstacle_marker_pub_;
   visualization_msgs::Marker obstacle_marker_box_;
   visualization_msgs::Marker obstacle_marker_text_;

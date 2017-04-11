@@ -14,8 +14,6 @@
 #include <visualization_msgs/MarkerArray.h>
 #include <hector_worldmodel_msgs/PosePercept.h>
 
-#include <hazard_model_msgs/HazardObject.h>
-
 #include <std_msgs/String.h>
 
 namespace map_combiner{
@@ -32,8 +30,6 @@ MapCombiner::MapCombiner()
   flood_debug_img_provider_.reset(new CvDebugProvider(flood_debug_nh, sensor_msgs::image_encodings::RGB8, true));
 
   pose_percept_publisher_ = pnh.advertise<hector_worldmodel_msgs::PosePercept>("/worldmodel/pose_percept", 5, false);
-
-  hazard_object_publisher_ = pnh.advertise<hazard_model_msgs::HazardObject>("/hazard_model/hazard_update", 5, false);
 
   poly_debug_pub_ = pnh.advertise<geometry_msgs::PolygonStamped>("debug_poly", 1, false);
 
@@ -567,42 +563,6 @@ void MapCombiner::segmentObstacleAt(const grid_map::Position& pos, const double 
 
       pose_percept_publisher_.publish(pose_percept);
     }
-
-    hazard_model_msgs::HazardObject hazard_object;
-
-    hazard_object.shape.shape_type = hazard_model_msgs::HazardShape::SHAPE_RECTANGLE;
-    hazard_object.shape.rect_x = rect.size.width;
-    hazard_object.shape.rect_y = rect.size.height;
-
-
-    hazard_object.pose.header.frame_id = "world";
-    hazard_object.pose.header.stamp = ros::Time::now();
-
-    hazard_object.pose.pose.position.x = rect.center.x;
-    hazard_object.pose.pose.position.y = rect.center.y;
-    hazard_object.pose.pose.position.z = robot_pose_->pose.position.z;
-
-    hazard_object.pose.pose.orientation.w = cos(rect.angle*0.5f);
-    hazard_object.pose.pose.orientation.z = sin(rect.angle*0.5f);
-
-    //hazard_object.pose.pose.orientation = robot_pose_->pose.orientation;
-
-    hazard_object.last_seen_from_pose = *robot_pose_;
-
-    if (avg_elevation < 0.0){
-      hazard_object.type = hazard_model_msgs::HazardObject::TYPE_NEGATIVE_OBSTACLE;
-
-    // Positive
-    }else if (avg_elevation < 0.2){
-      hazard_object.type = hazard_model_msgs::HazardObject::TYPE_POSITIVE_OBSTACLE;
-
-    // Suspended
-    }else{
-      hazard_object.type = hazard_model_msgs::HazardObject::TYPE_OVERHANGING_OBSTACLE;
-    }
-
-    hazard_object_publisher_.publish(hazard_object);
-
 
   }
 

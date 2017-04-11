@@ -14,7 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   grid_map_ros
   grid_map_cv
   nav_msgs
-  hazard_model_msgs
   roscpp
   dynamic_reconfigure
   cv_image_proc
